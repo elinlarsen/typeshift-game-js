@@ -1,0 +1,142 @@
+/* Colors : 
+grey -blue: rgb(48, 52, 80)
+blue-dark : rgb(43, 49, 90);
+yello button : rgb(226, 203, 51)
+orange cell :  #ff9966
+*/
+
+@font-face {
+    font-family: "Digi";
+    src: url("fonts/ds-digib.ttf");
+  }
+
+
+body{
+    color:#2C303F; 
+    box-sizing: border-box;
+    font-family: 'Montserrat';  
+    display: block; 
+    margin: 0%; 
+    padding:0%; 
+    }
+
+
+/* --------------------------------
+  Header
+  --------------------------------  */
+
+header{
+    background:rgb(48, 52, 80);
+    padding : 5%; 
+}
+
+h1 {
+    color: whitesmoke;
+    font-size: 4em; 
+    text-align: center; 
+    margin: 0%;
+}
+
+    /* --------------------------------
+  Instructions
+  --------------------------------  */
+
+  #instructions{
+    background: rgb(48, 52, 80);
+    padding: 2%;
+    display: flex;
+    justify-content:flex-end;
+
+  }
+
+  #howto{
+      border: none; 
+      font-size: 1.5em; 
+      color: rgb(226, 203, 51);
+      background: rgb(48, 52, 80);
+  }
+
+    /* --------------------------------
+  Main
+  --------------------------------  */
+  main{
+    background: rgb(48, 52, 80);
+    height: 600px;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.row{
+    display: flex;
+    flex-flow: row nowrap; 
+    justify-content: flex-start; 
+    align-items: center; 
+}
+
+.letter{
+    /*text-transform: uppercase;*/
+    color: white;
+    text-transform: uppercase;
+    font-size: 4em; 
+    border: 1px solid rgb(48, 52, 80); 
+    background:  #ff9966;
+
+}
+
+  /* --------------------------------
+  Footer
+  --------------------------------  */
+footer{
+    background: rgb(149, 153, 179);
+    display: flex;
+    justify-content: space-around;
+    align-items: center; 
+    padding: 5%;
+}
+
+
+/*
+#clock {
+border: 1px solid #000;
+border-radius: 20px;
+box-sizing: border-box;
+height: 30%;
+width: 20%;
+}
+*/
+
+
+#sphere {
+border: none; 
+box-sizing: border-box;
+/*font-family: "Digi";*/
+font-size: 1.5em;
+height: 50%;
+margin: 0 auto;
+padding: 2% 0;
+position: relative;
+text-align: center;
+width: 50%px;
+}
+
+
+
+.number {
+display: inline-block;
+width: 40px;
+}
+
+.btn {
+    border: none; 
+    display : flex;
+    font-size: 2em; 
+    /*font-family: "Digi";*/
+    background: rgb(149, 153, 179);
+}
+
+
+.btn.start { color: rgb(226, 203, 51); }
+.btn.stop  { color: red }
