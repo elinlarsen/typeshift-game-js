@@ -3,7 +3,16 @@ grey -blue: rgb(48, 52, 80)
 blue-dark : rgb(43, 49, 90);
 yello button : rgb(226, 203, 51)
 orange cell :  #ff9966
+
 */
+
+:root {
+    --background-color: #29293d;
+    --text-color: whitesmoke;
+    --cell-color: #ff9966;
+    --CTA: rgb(226, 203, 51);
+    --shadow:  #7e7571;
+  }
 
 @font-face {
     font-family: "Digi";
@@ -12,12 +21,13 @@ orange cell :  #ff9966
 
 
 body{
-    color:#2C303F; 
+    background : var(--background-color);
     box-sizing: border-box;
     font-family: 'Montserrat';  
     display: block; 
     margin: 0%; 
     padding:0%; 
+    color : var(--text-color);
     }
 
 
@@ -26,13 +36,11 @@ body{
   --------------------------------  */
 
 header{
-    background:rgb(48, 52, 80);
     padding : 5%; 
 }
 
 h1 {
-    color: whitesmoke;
-    font-size: 4em; 
+    font-size: 5em; 
     text-align: center; 
     margin: 0%;
 }
@@ -42,7 +50,6 @@ h1 {
   --------------------------------  */
 
   #instructions{
-    background: rgb(48, 52, 80);
     padding: 2%;
     display: flex;
     justify-content:flex-end;
@@ -51,17 +58,16 @@ h1 {
 
   #howto{
       border: none; 
-      font-size: 1.5em; 
+      font-size: 2em; 
       color: rgb(226, 203, 51);
-      background: rgb(48, 52, 80);
+      background: var(--background-color);
   }
 
-    /* --------------------------------
+  /* --------------------------------
   Main
   --------------------------------  */
   main{
-    background: rgb(48, 52, 80);
-    height: 600px;
+    height: 500px; 
     display: flex; 
     flex-direction: column;
     justify-content: center;
@@ -69,28 +75,88 @@ h1 {
 
 }
 
+.wrapper {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 20% 20% 20% 20% 20%;
+   /* grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    */
+}
+
+
 .row{
     display: flex;
     flex-flow: row nowrap; 
     justify-content: flex-start; 
-    align-items: center; 
+    align-items: center;
 }
 
+/* for large screens only*/
 .letter{
     /*text-transform: uppercase;*/
     color: white;
     text-transform: uppercase;
-    font-size: 4em; 
-    border: 1px solid rgb(48, 52, 80); 
+    font-size: 4.5em; 
+    border: 1px solid var(--background-color); 
     background:  #ff9966;
-
+    padding-left: 15px; 
+    padding-right: 10px; 
+    width:70px; 
+    height: 120px; 
+    opacity: 0.8;
 }
+
+.shadow{
+    border: 1px solid var(--background-color); 
+    background: var(--shadow);
+    padding-left: 15px; 
+    padding-right: 10px; 
+    width:70px; 
+    height: 120px; 
+    color : var(--shadow);
+    opacity: 0.2;
+}
+
+.invisible{
+    border: 1px solid var(--background-color); 
+    background: var(--background-color);
+    padding-left: 15px; 
+    padding-right: 10px; 
+    width:70px; 
+    height: 120px; 
+    color : var(--background-color);
+}
+
+
+.arrow.up{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 20px 20px 20px;
+    border-color: transparent transparent #7e7571 transparent;
+}
+
+.arrow.down{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 20px 0 20px;
+    border-color: #7e7571 transparent transparent transparent;
+}
+
+.arrow{
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-around; 
+}
+
+
 
   /* --------------------------------
   Footer
   --------------------------------  */
 footer{
-    background: rgb(149, 153, 179);
     display: flex;
     justify-content: space-around;
     align-items: center; 
@@ -113,7 +179,7 @@ width: 20%;
 border: none; 
 box-sizing: border-box;
 /*font-family: "Digi";*/
-font-size: 1.5em;
+font-size: 2.5em;
 height: 50%;
 margin: 0 auto;
 padding: 2% 0;
@@ -132,11 +198,11 @@ width: 40px;
 .btn {
     border: none; 
     display : flex;
-    font-size: 2em; 
+    font-size: 2.5em; 
     /*font-family: "Digi";*/
-    background: rgb(149, 153, 179);
+    background: var(--background-color);
 }
 
 
-.btn.start { color: rgb(226, 203, 51); }
-.btn.stop  { color: red }
+.btn.start { color: var(--CTA) }
+.btn.stop  { color: var(--cell-color)}
