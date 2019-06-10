@@ -4,13 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script type='text/javascript' src="data/dictionary.json"></script>
-    <script type='text/javascript' src="data/sampleWords.js"></script>
-    <script type='text/javascript' src="data/generatePseudoWords.js"></script>
-    <script type='module' src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" > </script>
-    <title>Document</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.6/lib/draggable.bundle.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <title> Elin - Typeshift</title>
 </head>
 <body>
+    <header>
+            <h1> Typeshift</h1>
+            
+    </header>
+
+    <div id='instructions'>
+            <button id="howto">How to play</button>
+    </div>
+   
+
+    <main id="main">
+
+
+    </main>
     
+
+    <footer>
+        <div id="play">
+                <button id="btnLeft" class="btn start">START</button> 
+        </div>
+        
+        <div id="found-words">
+
+        </div>
+        
+        
+        <section id="clock">
+                <div id="sphere">
+                  <span id="minDec" class="number">0</span><span id="minUni" class="number">0</span><span>:</span><span id="secDec" class="number">0</span><span id="secUni" class="number">0</span>
+                </div>
+        </section>
+            
+    </footer>
+ 
+<script type='text/javascript'  src="js/chronometer.js"></script>
+<script type='text/javascript'  src="js/playset.js"></script>
+<script type='text/javascript'  src="js/main.js"></script>
+
 </body>
 </html>
