@@ -1,8 +1,9 @@
 class Playset{
-    constructor(arrWords){ 
+    constructor(arrWords, dic){ 
         this.words=arrWords; 
         this.pseudos=[]; 
         this.proposedCombination=[];
+        this.dic=dic; 
     }
 
     /** 
@@ -10,7 +11,7 @@ class Playset{
     */ 
 
     splitWordsToLetter(){
-        var letters=[]
+        const letters=[]
         this.words.forEach( (word) => {
         letters.push(word.split(''))
         })
@@ -30,6 +31,28 @@ class Playset{
         res[index]=value
         return res
     }
+
+
+    /**
+     * 
+     * @param {*} arr1 
+     * @param {*} arr2 
+     */
+
+     retrieveRealWord(){
+         //retrieve  pseudos that are in doc 
+         const realWords=[];       
+         for (let p=0; p<this.pseudos.length; p++) {
+             const joined=this.pseudos[p].join("")
+             if(this.dic.includes(joined))
+             {realWords.push(joined)}
+         }
+         return realWords
+     }
+
+     get realWords(){
+         return this.retrieveRealWord()
+     }
 
 
     /** 

@@ -4,65 +4,81 @@
  * @todo : function check combination and display the change of colors when the combination is right
  * @todo : display instructions , pop hover 
  */
+
+const jsonPath="../data/dictionary.json"
+// var dicObj = $.getJSON(jsonPath)
+	
+
+function getJSONData() {
+    fetch(jsonPath, {
+        method: "GET"
+    }).then(res => {
+        console.log(res)
+        return res.json();
+    })
+}
+
+//dicObj=getJSONData()
+
+
+//var dicObj = require(jsonPath); //require reads directly a json file, require() is not part of the standard JavaScript API. // But in Node.js, it's a built-in function with a special purpose: to load modules.
+
+//wordsDic=Object.keys(dicObj)
+
+wordsDicShort=["boy", "cup", "soy", "bee", "body", "cop", "buy", "sea"]
+
 // --------------------------------
 // Playset
 // --------------------------------
 const long = ["spell", "great", "words"]
 const medium = ["abcd", "efgh", "ijkl"]
-const short = ["buy", "sea", "cop"]
+const short = ["bey", "sua", "cop"]
 
-const playset3words = new Playset(long)
+const playset3words = new Playset(short, wordsDicShort)
 const letters = playset3words.letters
 const pseudos = playset3words.generatePseudoWords()
+const real= playset3words.realWords
+console.log(real);
+
 
 
 // --------------------------------
 // Create HTML content 
 // --------------------------------
-const grid = document.getElementById("grid")
+var grid = document.getElementById("grid")
+var gridChildNodes=grid.childNodes
 
 function createLetterElement(l, index, indexWord) {
-
-    console.log("letter : ", l, "index : ",index, "indexWord", indexWord);
-    
-    const len = letters[0].length
-    const nbWords = letters.length
-    const nbRows = (nbWords - 1) * 2 + 2
-    const nbColumns = len + 2
-    const wordLen=len/nbRows
     const letter = document.createElement("span")
     grid.appendChild(letter);
     letter.className = "cell letter"
     letter.textContent = l
-    
-    if (indexWord==0){letter.style.gridRow=2}
-    if (indexWord==1){ letter.style.gridRow=3}
-    if (indexWord==2){letter.style.gridRow=4}
 
-    if(index==0){letter.style.gridColumnStart=2}
-    if(index==1){letter.style.gridColumn=3}
-    if(index==2){letter.style.gridColumn=4}
-    if(index==3){letter.style.gridColumn=5}
-    if(index==4){letter.style.gridColumn=6}
-   
-   
+    if (indexWord == 0) { letter.style.gridRow = 2; letter.setAttribute("row", "2")}
+    if (indexWord == 1) { letter.style.gridRow = 3; letter.setAttribute("row", "3") }
+    if (indexWord == 2) { letter.style.gridRow = 4 ; letter.setAttribute("row", "4")}
+
+    if (index == 0) { letter.style.gridColumnStart = 2; letter.setAttribute("col", "2") }
+    if (index == 1) { letter.style.gridColumn = 3; letter.setAttribute("col", "3") }
+    if (index == 2) { letter.style.gridColumn = 4; letter.setAttribute("col", "4") }
+    if (index == 3) { letter.style.gridColumn = 5; letter.setAttribute("col", "5") }
+    if (index == 4) { letter.style.gridColumn = 6; letter.setAttribute("col", "6") }
+
     letter.setAttribute("draggable", "true")
-    letter.setAttribute("dropzone", "false")
-    //letter.setAttribute("value", l)
 }
 
-function createEmptyElement(count, len) {
+function createEmptyElement(count, columnIndex) {
     shadow = document.createElement("span")
     grid.appendChild(shadow);
     shadow.setAttribute("draggable", "false")
     shadow.setAttribute("dropzone", "false")
+
     if (count == 2) {
         shadow.className = "cell shadow"
+        shadow.style.gridRow = 3
+        shadow.style.gridColumn = columnIndex
     }
-    else {
-        shadow.className = "cell invisible"
-    }
-    return shadow
+    else {shadow.className = "cell invisible"}
 }
 
 function createArrowRow(direction, len) {
@@ -73,8 +89,7 @@ function createArrowRow(direction, len) {
             arr.className = "cell arrow " + direction
             grid.appendChild(arr)
         }
-        else throw Error("direction must either be up or down")
-    }
+        else throw Error("direction must either be up or down")}
 }
 
 function drawCells(letters) {
@@ -82,22 +97,22 @@ function drawCells(letters) {
     console.log(count);
     const len = letters[0].length
     // first row
-    createEmptyElement(count, len) // col1 
+    createEmptyElement(count, 1) // col1 
     createArrowRow("down", len) // col2 ... col 2+ len
-    createEmptyElement(count, len) // col 2 + len +1
+    createEmptyElement(count, len + 2) // col 2 + len +1
 
     // rows with letters 
-    letters.forEach( (element,indexWord)=> {
-        createEmptyElement(count)
+    letters.forEach((element, indexWord) => {
+        createEmptyElement(count, 1)
         element.forEach((l, index) => { createLetterElement(l, index, indexWord) })
-        createEmptyElement(count)
+        createEmptyElement(count, len + 2)
         count++
     });
 
     // last rows
-    createEmptyElement(count, len)
+    createEmptyElement(count, 1)
     createArrowRow("up", len)
-    createEmptyElement(count, len)
+    createEmptyElement(count, len + 2)
 }
 
 
@@ -114,130 +129,135 @@ function drawGrid(letters) {
 // Dragging letters
 // --------------------------------
 
-getElement = () => {
-    const L = document.querySelectorAll(".letter") 
-    //console.log(L);
-    
+getElement = (dic) => {
+    const L = document.querySelectorAll(".letter")
     const nbLetters = L.length;
     const wordLen = L.length / 3;
     console.log("word length : ", wordLen, "nb of letters", nbLetters)
 
-    for (let i=wordLen; i<2*wordLen; i++){
-        L[i].setAttribute("draggable", "false")
+    for (let i = wordLen; i < 2 * wordLen; i++) { L[i].setAttribute("draggable", "false") }
+
+   for (let i = 0; i < wordLen; i++) {
+        let next = i + wordLen 
+        L[i].addEventListener("dragstart", function (evt) { dragStart(evt, i) }) 
+        L[next].addEventListener('dragover', function (evt) { dragOver(evt) })
+        L[next].addEventListener('drop', function (evt) { dropAndCheck(evt, i, dic) })     
     }
 
-    //for (let i = 0; i < wordLen; i++) {
-        //console.log(i)
-        //console.log(L[i].textContent)
+    for (let m = 2 * wordLen - 1; m < nbLetters; m++) {
+        let prev = m - wordLen
+        L[m].addEventListener("dragstart", function (evt) { dragStart(evt, m,) })
+        L[prev].addEventListener('dragover', function (evt) { dragOver(evt) } )
+        L[prev].addEventListener('drop', function (evt) { dropAndCheck(evt, m, dic) })      
+    }
 
-            i=0
-            next=i + wordLen
+    dragStart = (ev, j) => {
+        console.log('------------------------------------') 
+        console.log("drag START, letter dragged ", ev.target.textContent,'=?', L[j].textContent, " pos ", j);
+        setTimeout(() =>{ev.target.className='cell invisible'}, 0) 
+    }
 
-            //console.log( "letters is in first row", L[i].textContent )
-            //console.log("index of next letter" + next, "next letter : ", L[next].textContent)
-            
-            L[i].addEventListener("dragstart", function(evt){dragStart(evt, i, L)}) 
-            L[next].addEventListener('dragover', function (evt) { dragOver(evt) })
-            L[next].addEventListener('dragenter', function (evt) { dragEnter(evt, i, next, L) })
-            L[next].addEventListener('dragleave', function (evt) { dragLeave(evt, i,next, L) })
-            L[next].addEventListener('drop', function (evt) {dragDropDown(evt,i,L)})
-            L[i].addEventListener("dragend", function (evt) {dragEnd(evt,i,L)})
-    //}
-    /* for (let m=2*wordLen-1; i< nbLetters; i++){
-            prev=m - wordLen
-            //console.log( "letters is in third row",L[m].textContent )
-            //console.log("index of prev letter" + prev, "prev letter", L[prev].textContent)
-            
-            L[m].addEventListener("dragstart", function(evt){dragStart(evt, m, L)})
-            L[prev].addEventListener('dragover', function (evt) { dragOver(evt) })
-            L[prev].addEventListener('dragenter', function (evt) { dragEnter(evt, m, prev, L) })
-            L[prev].addEventListener('dragleave', function (evt) { dragLeave(evt, m,prev, L) })
-            L[prev].addEventListener('drop', function (evt) {dragDropUp(evt,m,L)})       
-            L[m].addEventListener("dragend", function (evt) {dragEnd(evt,m,L)})
-    } */
+    dragOver = (ev) => {
+        ev.preventDefault() // enables to drop
+    }
 
-dragStart = (ev, j, L) => {
-    console.log("drag start, letter dragged is : " , ev.target.textContent, 'should be equal to', L[j].textContent);
-    const wordLen = L.length / 3;
-    //setTimeout(() =>{event.target.className='cell invisible';}, 0) 
-}
+    /*
+    dragEnd= ()=>{
+        var proposition= new Proposition(wordLen, dic)
+        var prop=proposition.proposed
+        var guess=proposition.isGuessRight()
+        console.log("is the combination proposed, ", prop , "right ? ", guess)
+        proposition.turnBlue()
+    }
+    */ 
 
-dragEnd = (ev,j, L) => {
-    console.log("drag end, letter that ended the drag is ", ev.target.textContent, "should be equal to ", L[j].textContent);
-    ev.preventDefault();
-    //dragged.className = 'cell letter'
-}
+    dropAndCheck = (ev,j, dic) =>{
 
-dragOver =(ev) =>{
- ev.preventDefault() // enables to drop
-}
+        L[j].className='cell letter'
 
+        if(j< wordLen){dragDropDown(ev, j)}
+        else if(j>= 2 * wordLen){dragDropUp(ev, j)}
 
-dragEnter =(ev, j, follow, L)  => {
-    ev.preventDefault();
-    target = ev.target
-    targetLetter=target.textContent
-    console.log("drag enter");
-    console.log("index i", j, "index follow", follow)
-    console.log("DRAGGED letter", L[j].textContent, "ENTERS the target", targetLetter, 'should be equal to', L[follow].textContent );
-    
-    if(L[follow].textContent== targetLetter){ 
-        target.setAttribute("dropzone", "true")} 
-    else{
-        target.setAttribute("dropzone", "false")
-        // make conditions on mouse mouement
-    }     
-}
+        var proposition= new Proposition(wordLen, dic)
+        var prop=proposition.proposed
+        var guess=proposition.isGuessRight()
+        console.log("is the combination proposed, ", prop , "right ? ", guess)
+        proposition.turnBlue()
+    }
 
-
-dragLeave = (ev, j, follow, L) => {
-    ev.preventDefault();
-    console.log("DRAGGED letter", L[j].textContent, "LEAVES the target", ev.target.textContent,"should be equal to ", L[follow].textContent);
-    if(L[follow].textContent== targetLetter){ 
-        target.setAttribute("dropzone", "false")} 
-    //if(i-wordLen>=0){L[i-wordLen].setAttribute("dropzone", "false")} else{console.log("cannot go");}
-    //if(i+ wordLen<L.length){L[i+ wordLen].setAttribute("dropzone", "false")} else{console.log("cannot go");}
-}
-
-
-dragDropUp = (ev, j, L) => {
-    ev.preventDefault()
-    const wordLen = L.length / 3;
-    target = ev.target
-    console.log(" drop up ");
-
-    if(j>= 2*wordLen){ 
-    //if(i>= 2*wordLen && target.querySelector([dropzone=true])){ 
-        console.log("changing position with transition") // transition of each cell letter belonging to the same column up 
-        L[j].style.gridRow +=1        
-        L[j-wordLen].style.gridRow +=1
-        L[j-2*wordLen].style.gridRow +=1
-    }   
-}
-
-dragDropDown = (ev,j,L) =>{
-    ev.preventDefault()
-    const wordLen = L.length / 3;
-    console.log(" drop down");
-    target = ev.target
-
-    if(j< wordLen){
-    //if(i< wordLen  && target.querySelector([dropzone=true])){  // transition of each cell letter belonging to the same column up 
+    dragDropUp = (ev, j, dic) => { 
+        let rowPos = parseInt(L[j].style.gridRowStart)
+        console.log("drop UP, grid row : ", rowPos, "next grid row : ", rowPos + 1)
         
-        rowPos= parseInt(L[j].style.gridRowStart)
-        console.log("grid row : ",rowPos)
-        console.log("next grid row : ",rowPos+1)
+        L[j].style.gridRowStart = rowPos - 1
+        L[j - wordLen].style.gridRowStart = rowPos - 2
+        L[j - 2 * wordLen].style.gridRowStart = rowPos - 3
+    }
 
-        L[j].style.gridRowStart =  rowPos + 1
-        //L[j].style.transition= "all 1s linear"
-        console.log("grid row : ",L[j].style.gridRowStart)
-        L[j+wordLen].style.gridRowStart = rowPos+2
-        L[j+2*wordLen].style.gridRowStart = rowPos+3
+    dragDropDown = (ev, j, dic) => {       
+        let rowPos = parseInt(L[j].style.gridRowStart)
+        console.log("Drop DOWN, grid row : ", rowPos, "next grid row : ", rowPos + 1)
+        //L[j].style.gridRowStart = rowPos + 1
+        //L[j + wordLen].style.gridRowStart = rowPos + 2
+    // L[j + 2 * wordLen].style.gridRowStart = rowPos + 3
+    }
+
+}  // end of get element function
+
+// --------------------------------
+// Checking proposed combination of letters
+// --------------------------------
+
+class Proposition{
+    constructor(wordLength, dic){
+        this.grid= document.getElementById("grid");
+        this.nodes=grid.childNodes;
+        this.len=wordLength;
+        this.indexStart=(this.len+2)*2+1;
+        this.indexEnd= this.indexStart+this.len;
+        this.dic=dic;
+    }
+
+    getCombination(){
+        const row=3
+        const cols=[...Array(this.len+2).keys()];       
+        var proposed=[]
+        var indexProposed=[]
+        for (let c=2; c<cols.length; c++){
+            for(let i=0; i< this.nodes.length; i++){
+                //proposed.push(this.gridNodes[i].textContent)
+                if (this.nodes[i].style.gridRowStart==row && this.nodes[i].style.gridColumnStart==c){
+                    proposed.push(this.nodes[i].textContent)
+                    indexProposed.push(i)
+                }
+            }
+        }
+        return {proposed: proposed.join(""), index: indexProposed}
+    }
+
+    get proposed(){
+        return this.getCombination()
+    }
+
+    isGuessRight () {
+        var prop=this.getCombination().proposed
+        if (this.dic.includes(prop)){return true}
+        else {return false}
+    }
+
+    turnBlue (){
+        var res=this.isGuessRight()
+        var index=this.getCombination().index
+        if(res){
+            for (let i=0; i<index.length; i++){
+                console.log(index[i])
+                console.log(this.nodes)
+                this.nodes[index[i]].className =' cell letter rightGuess'
+            }
+        }
     }
 }
 
-
-} // end of get element function
 
 // --------------------------------
 // Chronometer
@@ -273,7 +293,7 @@ function setStopBtn() {
 
 function setStartBtn() {
     btnLeft.textContent = "START";
-    btnLeft.classList = "btn start";
+    btnLeft.className = "btn start";
 }
 
 // Start/Stop Button function
@@ -282,9 +302,10 @@ btnLeftListener = () => {
         chrono.startClick()
         drawGrid(letters)
         drawCells(letters)
-        getElement()
+        getElement(wordsDicShort)
         printTime()
         setStopBtn()
+        
     }
     else if (btnLeft.className == "btn stop" && btnLeft.textContent == "STOP") {
         chrono.stopClick()

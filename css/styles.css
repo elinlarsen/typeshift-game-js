@@ -12,6 +12,7 @@ orange cell :  #ff9966
     --letter-color: #ff9966;
     --CTA: rgb(226, 203, 51);
     --shadow:  #7e7571;
+    --aquamarine: #13a8a2;
   }
 
 @font-face {
@@ -26,7 +27,7 @@ body{
     font-family: 'Montserrat';  
     display: block; 
     margin: 0%; 
-    padding:0%; 
+    padding:2% 5%; 
     color : var(--text-color);
     }
 
@@ -90,6 +91,15 @@ h1 {
 
 .hold{
     border: 1px solid var(--shadow);
+}
+
+.cell.letter.rightGuess{
+    background: var(--aquamarine);
+    text-transform: uppercase;
+    text-align: center; 
+    font-size: 3em; 
+    border: 1px solid var(--background-color); 
+    opacity: 0.8;
 }
 
 .cell.letter{
