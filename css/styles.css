@@ -9,7 +9,7 @@ orange cell :  #ff9966
 :root {
     --background-color: #29293d;
     --text-color: whitesmoke;
-    --cell-color: #ff9966;
+    --letter-color: #ff9966;
     --CTA: rgb(226, 203, 51);
     --shadow:  #7e7571;
   }
@@ -36,7 +36,7 @@ body{
   --------------------------------  */
 
 header{
-    padding : 5%; 
+    padding : 1%; 
 }
 
 h1 {
@@ -50,17 +50,17 @@ h1 {
   --------------------------------  */
 
   #instructions{
-    padding: 2%;
+    padding: 0%;
     display: flex;
-    justify-content:flex-end;
-
-  }
+    justify-content:flex-end;  
+}
 
   #howto{
       border: none; 
       font-size: 2em; 
       color: rgb(226, 203, 51);
       background: var(--background-color);
+      cursor: pointer;
   }
 
   /* --------------------------------
@@ -72,85 +72,74 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
 }
 
-.wrapper {
+
+#grid {
     display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
-    grid-template-rows: 20% 20% 20% 20% 20%;
-   /* grid-gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
-    */
+    grid-gap: 0rem; 
+    justify-content : center; /* pour justifier la ligne au centre de main*/
+
 }
 
+.cell{
+    width: 75px;
+    height: 75px;
 
-.row{
-    display: flex;
-    flex-flow: row nowrap; 
-    justify-content: flex-start; 
-    align-items: center;
 }
 
-/* for large screens only*/
-.letter{
-    /*text-transform: uppercase;*/
-    color: white;
+.hold{
+    border: 1px solid var(--shadow);
+}
+
+.cell.letter{
+    color: var(--text-color);
     text-transform: uppercase;
-    font-size: 4.5em; 
+    text-align: center; 
+    font-size: 3em; 
     border: 1px solid var(--background-color); 
-    background:  #ff9966;
-    padding-left: 15px; 
-    padding-right: 10px; 
-    width:70px; 
-    height: 120px; 
+    background:  var(--letter-color);
     opacity: 0.8;
+    cursor: pointer; /* when we hover over, the curser becomes a pointer*/
 }
 
-.shadow{
+.cell.shadow{
     border: 1px solid var(--background-color); 
     background: var(--shadow);
-    padding-left: 15px; 
-    padding-right: 10px; 
-    width:70px; 
-    height: 120px; 
     color : var(--shadow);
-    opacity: 0.2;
+    opacity: 0.15;
+    /*grid-column-start:1; 
+    grid-column-end: 7;
+    grid-row-start: 4; 
+    grid-row-end: 4;*/
 }
 
-.invisible{
+.cell.invisible{
     border: 1px solid var(--background-color); 
     background: var(--background-color);
-    padding-left: 15px; 
-    padding-right: 10px; 
-    width:70px; 
-    height: 120px; 
     color : var(--background-color);
-}
-
-
-.arrow.up{
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 20px 20px 20px;
-    border-color: transparent transparent #7e7571 transparent;
-}
-
-.arrow.down{
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 20px 20px 0 20px;
-    border-color: #7e7571 transparent transparent transparent;
 }
 
 .arrow{
     display: flex; 
     flex-direction: row; 
     justify-content: space-around; 
+    margin: 0px; 
 }
 
+
+/*.arrow.up{
+    border-style: solid;
+    border-width: 0 50px 50px 50px ; 
+    border-color: transparent transparent var(--shadow) transparent;
+}
+
+.arrow.down{
+    border-style: solid;
+    border-width: 50px 50px 0 50px;
+    border-color: var(--shadow) transparent transparent transparent;
+}
+*/
 
 
   /* --------------------------------
@@ -160,19 +149,8 @@ footer{
     display: flex;
     justify-content: space-around;
     align-items: center; 
-    padding: 5%;
+    padding: 1%;
 }
-
-
-/*
-#clock {
-border: 1px solid #000;
-border-radius: 20px;
-box-sizing: border-box;
-height: 30%;
-width: 20%;
-}
-*/
 
 
 #sphere {
@@ -188,8 +166,6 @@ text-align: center;
 width: 50%px;
 }
 
-
-
 .number {
 display: inline-block;
 width: 40px;
@@ -201,6 +177,7 @@ width: 40px;
     font-size: 2.5em; 
     /*font-family: "Digi";*/
     background: var(--background-color);
+    cursor: pointer;
 }
 
 
