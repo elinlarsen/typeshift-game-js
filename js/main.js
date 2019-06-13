@@ -283,12 +283,11 @@ import { Game } from "./game.js"
 
         const endParty = ()=>{
             var R=document.querySelectorAll(".rightGuess")
-            console.log("is nb of letters = nb of guess ?", L.length==R.length)
-            console.log("nb of letters", L.length)
-            console.log(" nb of guess ?",R.length)
             if(L.length==R.length)
             {
-                createSpanAllFound(game.getFoundWords(game.indexOfPlay))
+                let allFounds=game.getFoundWords(game.indexOfPlay)
+                console.log("all letters found !", "words found : ", allFounds)
+                createSpanAllFound(allFounds)
                 btnLeft.click();
             } 
         }
