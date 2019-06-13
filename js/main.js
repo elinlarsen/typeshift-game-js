@@ -1,3 +1,5 @@
+import { Game } from "./game.js"
+
 /**
  * @todo: manage stop button, display results at the end of a party OR when touching stop
  * @todo : drag an drop button
@@ -32,8 +34,8 @@
         })
     }
 
-    
-    
+
+
 
 
     function getJSONCleanData() {
@@ -45,7 +47,7 @@
             return res.json();
         }).then(w => {
             allFrequentWords = shuffle(w);
-            wordsList=createGameSet(allFrequentWords, 3, [4,5, 6])
+            wordsList = createGameSet(allFrequentWords, 3, [4, 5, 6])
         })
     }
 
@@ -55,7 +57,7 @@
     const chrono = new Chronometer()
     const game = new Game(allWords)
 
-    
+
     const btnRight = document.getElementById("btnRight")
     const btnHowTo = document.getElementById("howto")
     var btnLeft = document.getElementById('btnLeft');
@@ -69,18 +71,18 @@
     // Data processing : reading, cleaning, filtering, shuffling
     // --------------------------------
 
-    
-    const shuffle =(array) => {
-        var currentIndex = array.length, temporaryValue, randomIndex;  
+
+    const shuffle = (array) => {
+        var currentIndex = array.length, temporaryValue, randomIndex;
         while (0 !== currentIndex) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex -= 1;
-          temporaryValue = array[currentIndex];
-          array[currentIndex] = array[randomIndex];
-          array[randomIndex] = temporaryValue;
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
         }
         return array;
-      }
+    }
 
     function cleanWords(words) {
         //return words.map((x) => {x.replace(/[^a-zA-Z ]/g, "")})
@@ -91,21 +93,21 @@
         return words.filter(word => word.length == lengthToFilter);
     }
 
-    function createGameSet(words, nbInSet, lengthsToFilter){
-        var fullArray=[];
-        const clean=cleanWords(words)
-        const nbOfSets=Math.floor(words.length/nbInSet); 
-        for (let i=0; i<nbOfSets; i+=nbInSet){ //for each set 
-            for (let l=0; l<lengthsToFilter.length; l++){ //for a given word length
-                let len=lengthsToFilter[l];
-                let byLength=filterByLengthEqual(len, clean) //filter the words by this length              
-                let set=byLength.slice(i, i+nbInSet)
-                if(set!== 'undefined' && set.length == 3){fullArray.push(set)}
+    function createGameSet(words, nbInSet, lengthsToFilter) {
+        var fullArray = [];
+        const clean = cleanWords(words)
+        const nbOfSets = Math.floor(words.length / nbInSet);
+        for (let i = 0; i < nbOfSets; i += nbInSet) { //for each set 
+            for (let l = 0; l < lengthsToFilter.length; l++) { //for a given word length
+                let len = lengthsToFilter[l];
+                let byLength = filterByLengthEqual(len, clean) //filter the words by this length              
+                let set = byLength.slice(i, i + nbInSet)
+                if (set !== 'undefined' && set.length == 3) { fullArray.push(set) }
             }
         }
         return fullArray
     }
-    
+
 
 
     // --------------------------------
@@ -124,11 +126,13 @@
         if (indexWord == 1) { letter.style.gridRow = 3; /*letter.setAttribute("row", "3") */ }
         if (indexWord == 2) { letter.style.gridRow = 4; /*letter.setAttribute("row", "4")*/ }
 
-        if (index == 0) { letter.style.gridColumn= 2; /*letter.setAttribute("col", "2")*/ }
+        if (index == 0) { letter.style.gridColumn = 2; /*letter.setAttribute("col", "2")*/ }
         if (index == 1) { letter.style.gridColumn = 3; /*letter.setAttribute("col", "3") */ }
         if (index == 2) { letter.style.gridColumn = 4; /*letter.setAttribute("col", "4") */ }
         if (index == 3) { letter.style.gridColumn = 5; /*letter.setAttribute("col", "5") */ }
         if (index == 4) { letter.style.gridColumn = 6; /*letter.setAttribute("col", "6") */ }
+        if (index == 5) { letter.style.gridColumn = 7; /*letter.setAttribute("col", "7") */ }
+        if (index == 6) { letter.style.gridColumn = 8; /*letter.setAttribute("col", "8") */ }
 
         letter.setAttribute("draggable", "true")
     }
@@ -198,60 +202,80 @@
         grid.style.gridTemplateRows = `repeat(${nbRows}, 1fr)`;
     }
 
+
+    function createSpanAllFound(founds) {
+        const foundAll = document.getElementById("found-words")
+        for (let f = 0; f < founds.length; f++) {
+            const foundEl = document.createElement("span")
+            foundAll.appendChild(foundEl);
+            foundEl.className = "found"
+            foundEl.textContent = this.found[f]
+        }
+    }
+
+
+
     // --------------------------------
     // Dragging letters
     // --------------------------------
 
-    const dragLetters = (dic) => {
+    const dragLetters = (dic, playset) => {
         var draggedElement = null;
         const L = document.querySelectorAll(".letter")
         const nbLetters = L.length;
         const wordLen = L.length / 3;
-        console.log("word length : ", wordLen, "nb of letters", nbLetters)
+        console.log("word length : ", wordLen, "nb of letters", nbLetters);
 
         const dragStart = (ev, j) => {
             console.log('------------------------------------')
         }
 
         const dragOver = (ev) => {
-            ev.preventDefault() // enables to drop
+            ev.preventDefault(); // enables to drop
         }
 
-        const dropAndCheck = (ev, j, dic ) => {
+        const dropAndCheck = (ev, j, dic) => {
+
+            //L[j].className = 'cell letter';   
+            const dragRow = parseInt(draggedElement.style.gridRowStart);
+            const dragCol = parseInt(draggedElement.style.gridColumnStart);
+
+            const dropRow = parseInt(ev.target.style.gridRowStart);
+            const dropCol = parseInt(ev.target.style.gridColumnStart);
+
+            if (dragRow > dropRow && dragCol == dropCol) { dragDropUp(ev, j) }
+            else if (dragRow < dropRow && dragCol == dropCol) { dragDropDown(ev, j) }
+
+            var prop = new Proposition(wordLen, dic, playset.found);
+            prop.turnBlue();
+            console.log(prop.found)
+            console.log("found : ", prop.found)
             
-            //L[j].className = 'cell letter';
-            console.log("coucou2", draggedElement)
-   
-            const dragRow=parseInt(draggedElement.style.gridRowStart)
-            const dragCol=parseInt(draggedElement.style.gridColumnStart)
+            prop.found==null ? console.log("not a word") :game.setFoundWord(prop.found)
+            
+            console.log("game.foundWords ",game.foundWords )
+            console.log('founds of the party', game.getFoundWords(game.indexOfPlay))
 
-            const dropRow=parseInt(ev.target.style.gridRowStart)    
-            const dropCol=parseInt(ev.target.style.gridColumnStart)
-
-            if (dragRow > dropRow && dragCol==dropCol) { dragDropUp(ev, j) }
-            else if(dragRow < dropRow && dragCol==dropCol){dragDropDown(ev, j)}
-
-            var proposition = new Proposition(wordLen, dic)
-            proposition.turnBlue()
+        
         }
 
         const dragDropUp = (ev, j, dic) => {
             console.log("drop up");
-            const rowPos = parseInt(L[j].style.gridRowStart)
-            if (j - 2 * wordLen >=0){
-            L[j].style.gridRowStart = rowPos - 1
-            L[j - wordLen].style.gridRowStart = rowPos - 2
-            L[j - 2 * wordLen].style.gridRowStart = rowPos - 3
+            const rowPos = parseInt(L[j].style.gridRowStart);
+            if (j - 2 * wordLen >= 0) {
+                L[j].style.gridRowStart = rowPos - 1;
+                L[j - wordLen].style.gridRowStart = rowPos - 2;
+                L[j - 2 * wordLen].style.gridRowStart = rowPos - 3;
             }
         }
 
         const dragDropDown = (ev, j, dic) => {
-            console.log("drop down");            
+            console.log("drop down");
             const rowPos = parseInt(L[j].style.gridRowStart)
-            if (j + 2 * wordLen <nbLetters){
-            L[j].style.gridRowStart = rowPos + 1
-            L[j + wordLen].style.gridRowStart = rowPos + 2
-            L[j + 2 * wordLen].style.gridRowStart = rowPos + 3
+            if (j + 2 * wordLen < nbLetters) {
+                L[j].style.gridRowStart = rowPos + 1
+                L[j + wordLen].style.gridRowStart = rowPos + 2
+                L[j + 2 * wordLen].style.gridRowStart = rowPos + 3
             }
         }
 
@@ -260,78 +284,27 @@
         for (let i = 0; i < wordLen; i++) {
             let next = i + wordLen
             L[i].addEventListener("dragstart", function (evt) {
-                
+
                 draggedElement = evt.target;
                 dragStart(evt, i);
             })
             L[next].addEventListener('dragover', function (evt) { dragOver(evt) })
-            L[next].addEventListener('drop', function (evt) { dropAndCheck(evt, i, dic);})
+            L[next].addEventListener('drop', function (evt) { dropAndCheck(evt, i, dic); })
 
         }
 
         for (let m = 2 * wordLen - 1; m < nbLetters; m++) {
             let prev = m - wordLen
-            L[m].addEventListener("dragstart", function (evt) { 
+            L[m].addEventListener("dragstart", function (evt) {
                 draggedElement = evt.target;
                 dragStart(evt, m);
             })
             L[prev].addEventListener('dragover', function (evt) { dragOver(evt) })
-            L[prev].addEventListener('drop', function (evt) { dropAndCheck(evt, m, dic ) })
+            L[prev].addEventListener('drop', function (evt) { dropAndCheck(evt, m, dic) })
         }
 
-    }  
-
-    // --------------------------------
-    // Checking proposed combination of letters
-    // --------------------------------
-
-    class Proposition {
-        constructor(wordLength, dic) {
-            this.grid = document.getElementById("grid");
-            this.nodes = grid.childNodes;
-            this.len = wordLength;
-            this.indexStart = (this.len + 2) * 2 + 1;
-            this.indexEnd = this.indexStart + this.len;
-            this.dic = dic;
-        }
-
-        getCombination() {
-            const row = 3
-            const cols = [...Array(this.len + 2).keys()];
-            var proposed = []
-            var indexProposed = []
-            for (let c = 2; c < cols.length; c++) {
-                for (let i = 0; i < this.nodes.length; i++) {
-                    //proposed.push(this.gridNodes[i].textContent)
-                    if (this.nodes[i].style.gridRowStart == row && this.nodes[i].style.gridColumnStart == c) {
-                        proposed.push(this.nodes[i].textContent)
-                        indexProposed.push(i)
-                    }
-                }
-            }
-            return { proposed: proposed.join(""), index: indexProposed }
-        }
-
-        get proposed() {
-            return this.getCombination()
-        }
-
-        isGuessRight() {
-            var prop = this.getCombination().proposed
-            if (this.dic.includes(prop)) { return true }
-            else { return false }
-        }
-
-        turnBlue() {
-            var res = this.isGuessRight()
-            var index = this.getCombination().index
-            if (res) {
-                for (let i = 0; i < index.length; i++) {
-                    this.nodes[index[i]].className = ' cell letter rightGuess'
-                }
-            }
-        }
     }
+
 
 
     // --------------------------------
@@ -344,8 +317,8 @@
 
     function printMinutes() {
         var min = chrono.twoDigitsNumber(chrono.getMinutes())
-         minDec.textContent = min.charAt(0)
-         minUni.textContent = min.charAt(1)
+        minDec.textContent = min.charAt(0)
+        minUni.textContent = min.charAt(1)
     }
 
     function printSeconds() {
@@ -374,31 +347,34 @@
 
     // START / STOP PARTY
     const btnLeftListener = (game, wordsList, chrono) => {
-        let indexOfPlay = game.indexOfPlay
+        let indexOfPlay = game.indexOfPlay;
         let words = wordsList[indexOfPlay];
-        let playset = new Playset(words)
-        let letters = playset.selectRandomlyPseudo()
-        let dic=allWords
+        let dic = allWords;
+        let playset = new Playset(words);
+        let letters = playset.selectRandomlyPseudo();
+
 
         if (btnLeft.className == "btn start" && btnLeft.textContent == "START") {
-            chrono.startClick()
-            drawGrid(letters)
-            drawCells(letters)
-            dragLetters(dic)
-            printTime()
-            setStopBtn()
-            setHoldBtn() 
+            chrono.startClick();
+            drawGrid(letters);
+            drawCells(letters);
+            dragLetters(dic, playset);
+            printTime();
+            setStopBtn();
+            setHoldBtn();
 
         }
         else if (btnLeft.className == "btn stop" && btnLeft.textContent == "STOP") {
-            chrono.stopClick()
-            setStartBtn()
-            setNextBtn()
+            chrono.stopClick();
+            setStartBtn();
+            setNextBtn();
+            console.log("founds (span creation) : ", game.getFoundWords());
+            createSpanAllFound(game.getFoundWords())
         }
     }
 
     // --------------------------------
-    // Intructions and Next Play button 
+    // Intructions 
     // --------------------------------
     const btnHowToListener = () => {
 
@@ -409,16 +385,17 @@
     // --------------------------------
 
     const btnRightListener = (game, wordsList, chrono) => {
-        if (btnRight.className == "btn triangle next" && btnLeft.className == "btn stop") {
-            
+        if (btnRight.className == "btn triangle next" && btnLeft.className == "btn start") {
+
             console.log("next party !");
+            setNextBtn()
             game.nextPlay()
             emptyGrid()
             btnLeftListener(game, wordsList, chrono)
             //setHoldBtn ()
         }
-        else if (btnRight.className == "btn triangle hold" && btnLeft.className == "btn start"){
-            
+        else if (btnRight.className == "btn triangle hold" && btnLeft.className == "btn stop") {
+
             console.log("party blocked")
         }
         return
@@ -437,11 +414,11 @@
             btnLeft.addEventListener('click', function (evt) { btnLeftListener(game, wordsList, chrono) });
             btnLeft.click();
             btnHowTo.addEventListener('click', btnHowToListener)
-            btnRight.addEventListener('click', function (evt) { btnRightListener(game, wordsList,  chrono) });
-    
-    
+            btnRight.addEventListener('click', function (evt) { btnRightListener(game, wordsList, chrono) });
+
+
         })
-      
+
     });
 
 

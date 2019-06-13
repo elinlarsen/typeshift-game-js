@@ -3,6 +3,7 @@ class Playset{
         this.words=arrWords; 
         this.pseudos=[]; 
         this.dic=arrWords.flat(); 
+        this.found=[];
     }
 
     /** 

@@ -196,15 +196,15 @@ width: 40px;
     font-size: 2.5em; 
     background: var(--background-color);
     cursor: pointer;
+    margin-right:  5%; 
 }
 
 .btn.start { 
     color: var(--CTA);
-    margin: 0 5%; 
+   
  }
 .btn.stop  { 
     color: var(--cell-color);
-    margin: 0 5%; 
 }
 
 .btn.triangle{
