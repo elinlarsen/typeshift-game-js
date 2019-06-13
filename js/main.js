@@ -209,7 +209,7 @@ import { Game } from "./game.js"
             const foundEl = document.createElement("span")
             foundAll.appendChild(foundEl);
             foundEl.className = "found"
-            foundEl.textContent = this.found[f]
+            foundEl.textContent = founds[f]
         }
     }
 
@@ -256,6 +256,8 @@ import { Game } from "./game.js"
             console.log("game.foundWords ",game.foundWords )
             console.log('founds of the party', game.getFoundWords(game.indexOfPlay))
 
+            endParty(); //are all letters been found ?
+
         
         }
 
@@ -277,6 +279,18 @@ import { Game } from "./game.js"
                 L[j + wordLen].style.gridRowStart = rowPos + 2
                 L[j + 2 * wordLen].style.gridRowStart = rowPos + 3
             }
+        }
+
+        const endParty = ()=>{
+            var R=document.querySelectorAll(".rightGuess")
+            console.log("is nb of letters = nb of guess ?", L.length==R.length)
+            console.log("nb of letters", L.length)
+            console.log(" nb of guess ?",R.length)
+            if(L.length==R.length)
+            {
+                createSpanAllFound(game.getFoundWords(game.indexOfPlay))
+                btnLeft.click();
+            } 
         }
 
         //for (let i = wordLen; i < 2 * wordLen; i++) { L[i].setAttribute("draggable", "false") }
@@ -302,9 +316,7 @@ import { Game } from "./game.js"
             L[prev].addEventListener('dragover', function (evt) { dragOver(evt) })
             L[prev].addEventListener('drop', function (evt) { dropAndCheck(evt, m, dic) })
         }
-
-    }
-
+}
 
 
     // --------------------------------
@@ -362,14 +374,14 @@ import { Game } from "./game.js"
             printTime();
             setStopBtn();
             setHoldBtn();
+            
 
         }
         else if (btnLeft.className == "btn stop" && btnLeft.textContent == "STOP") {
             chrono.stopClick();
             setStartBtn();
             setNextBtn();
-            console.log("founds (span creation) : ", game.getFoundWords());
-            createSpanAllFound(game.getFoundWords())
+            console.log("founds (span creation) : ", game.getFoundWords(game.indexOfPlay));
         }
     }
 
