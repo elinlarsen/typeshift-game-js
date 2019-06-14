@@ -11,7 +11,7 @@ import { Game } from "./game.js"
  
     function getJSONDictionnary() {
         return new Promise((resolve, reject) => {
-            const jsonPath = "./../data/dictionary.json";
+            const jsonPath = "../data/dictionary.json";
             fetch(jsonPath).then(res => {
                 if (!res.ok) {
                     throw new Error("HTTP error, status = " + response.status);
@@ -25,7 +25,7 @@ import { Game } from "./game.js"
         })
     }
     function getJSONCleanData() {
-        const jsonPath = "./../data/allFrequentWords.json";
+        const jsonPath = "../data/allFrequentWords.json";
         fetch(jsonPath).then(res => {
             if (!res.ok) {
                 throw new Error("HTTP error, status = " + response.status);
