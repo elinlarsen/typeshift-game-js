@@ -173,8 +173,8 @@ import { Game } from "./game.js"
     }
 
     function emptyFooter(){
-        while(foundAll.firstChild){
-            foundAll.removeChild(foundAll.firstChild)
+        while(allFoundParent.firstChild){
+            allFoundParent.removeChild(allFoundParent.firstChild)
         }
     }
 
@@ -196,7 +196,7 @@ import { Game } from "./game.js"
             var nbInCols;
             if(nbFounds<=4){ nbInCols=2}
             else if (nbFounds<=8){nbInCols=3}
-            else {nbInCols=4}
+            else {nbInCols=4} 
 
             for (let i=0; i<nbCols; i++){
                 const colWords=document.createElement("span");
