@@ -37,7 +37,8 @@ body{
   --------------------------------  */
 
 header{
-    padding : 1%; 
+    padding : 0; 
+    margin:0;
     height: 15vh; 
 }
 
@@ -75,6 +76,7 @@ h1 {
     visibility: visible;
     text-align: center;
     width: auto;
+    font-size: 1em;
     box-shadow: 0 2px 5px 0 var(--background-color); 
   }
 
