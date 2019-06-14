@@ -114,6 +114,7 @@ import { Game } from "./game.js"
     // Create HTML content 
     // --------------------------------
     var grid = document.getElementById("grid")
+    var foundAll = document.getElementById("found-words")
     //var gridChildNodes = grid.childNodes
 
     function createLetterElement(l, index, indexWord) {
@@ -166,29 +167,39 @@ import { Game } from "./game.js"
     function drawCells(letters) {
         var count = 1;
         const len = letters[0].length
-        // first row
-        createEmptyElement(count, 1) // col1 
-        createArrowRow("down", len) // col2 ... col 2+ len
-        createEmptyElement(count, len + 2) // col 2 + len +1
 
-        // rows with letters 
-        letters.forEach((element, indexWord) => {
+        if(!grid.firstChild){
+            // first row
+            createEmptyElement(count, 1) // col1 
+            createArrowRow("down", len) // col2 ... col 2+ len
+            createEmptyElement(count, len + 2) // col 2 + len +1
+
+            // rows with letters 
+            letters.forEach((element, indexWord) => {
+                createEmptyElement(count, 1)
+                element.forEach((l, index) => { createLetterElement(l, index, indexWord) })
+                createEmptyElement(count, len + 2)
+                count++
+            });
+
+            // last rows
             createEmptyElement(count, 1)
-            element.forEach((l, index) => { createLetterElement(l, index, indexWord) })
+            createArrowRow("up", len)
             createEmptyElement(count, len + 2)
-            count++
-        });
+        }
 
-        // last rows
-        createEmptyElement(count, 1)
-        createArrowRow("up", len)
-        createEmptyElement(count, len + 2)
     }
 
     function emptyGrid() {
-        grid = document.getElementById("grid")
+        //grid = document.getElementById("grid")
         while (grid.firstChild) {
             grid.removeChild(grid.firstChild);
+        }
+    }
+
+    function emptyFooter(){
+        while(foundAll.firstChild){
+            foundAll.removeChild(foundAll.firstChild)
         }
     }
 
@@ -204,13 +215,20 @@ import { Game } from "./game.js"
 
 
     function createSpanAllFound(founds) {
-        const foundAll = document.getElementById("found-words")
-        for (let f = 0; f < founds.length; f++) {
-            const foundEl = document.createElement("span")
-            foundAll.appendChild(foundEl);
-            foundEl.className = "found"
-            foundEl.textContent = founds[f]
+        if(!foundAll.firstChild){
+            console.log("footer empty, will be filled with found words")
+            for (let f = 0; f < founds.length; f++) {
+                const foundEl = document.createElement("span");
+                foundAll.appendChild(foundEl);
+                foundEl.className = "found";
+                foundEl.textContent = founds[f];
+            }
+        } 
+        else {
+            console.log("footer of words has already words")
+            console.log(foundAll.firstChild)
         }
+
     }
 
 
@@ -224,7 +242,6 @@ import { Game } from "./game.js"
         const L = document.querySelectorAll(".letter")
         const nbLetters = L.length;
         const wordLen = L.length / 3;
-        console.log("word length : ", wordLen, "nb of letters", nbLetters);
 
         const dragStart = (ev, j) => {
             console.log('------------------------------------')
@@ -248,14 +265,9 @@ import { Game } from "./game.js"
 
             var prop = new Proposition(wordLen, dic, playset.found);
             prop.turnBlue();
-            console.log(prop.found)
-            console.log("found : ", prop.found)
-            
+  
             prop.found==null ? console.log("not a word") :game.setFoundWord(prop.found)
             
-            console.log("game.foundWords ",game.foundWords )
-            console.log('founds of the party', game.getFoundWords(game.indexOfPlay))
-
             endParty(); //are all letters been found ?
 
         
@@ -289,6 +301,7 @@ import { Game } from "./game.js"
                 console.log("all letters found !", "words found : ", allFounds)
                 createSpanAllFound(allFounds)
                 btnLeft.click();
+                //chrono.stopClick()
             } 
         }
 
@@ -380,16 +393,10 @@ import { Game } from "./game.js"
             chrono.stopClick();
             setStartBtn();
             setNextBtn();
-            console.log("founds (span creation) : ", game.getFoundWords(game.indexOfPlay));
+            console.log("End of party, go to the next one !");
         }
     }
 
-    // --------------------------------
-    // Intructions 
-    // --------------------------------
-    const btnHowToListener = () => {
-
-    }
 
     // --------------------------------
     // Next Play button  (rigth button)
@@ -402,6 +409,8 @@ import { Game } from "./game.js"
             setNextBtn()
             game.nextPlay()
             emptyGrid()
+            emptyFooter()
+            chrono.resetClick()
             btnLeftListener(game, wordsList, chrono)
             //setHoldBtn ()
         }
@@ -424,7 +433,6 @@ import { Game } from "./game.js"
             console.log(res);
             btnLeft.addEventListener('click', function (evt) { btnLeftListener(game, wordsList, chrono) });
             btnLeft.click();
-            btnHowTo.addEventListener('click', btnHowToListener)
             btnRight.addEventListener('click', function (evt) { btnRightListener(game, wordsList, chrono) });
 
 

@@ -13,10 +13,8 @@ export class Game {
     setFoundWord(w) {
         if (!this.foundWords[this.indexOfPlay]) {
             this.foundWords[this.indexOfPlay] = [];
-            console.log("!this.foundWords[this.indexOfPlay]", !this.foundWords[this.indexOfPlay])
         } else {
             this.foundWords[this.indexOfPlay].push(w);
-            console.log("word ", w, "added")
         }
     }
 
