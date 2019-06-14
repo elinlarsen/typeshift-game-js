@@ -207,12 +207,6 @@ footer{
     margin: 0%; 
 }
 
-#found-title{
-    text-align: center;
-    color: rgb(226, 203, 51);
-}
-
-
 #sphere {
     border: none; 
     box-sizing: border-box;
@@ -274,7 +268,28 @@ footer{
 
 }
 
+
+#found-title{
+    text-align: center;
+    color: rgb(226, 203, 51);
+}
+
+
+#not-found-title{
+    text-align: center;
+    color: rgb(226, 203, 51);
+}
+
 #found-words{
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 1.5em;
+    text-transform: uppercase;
+}
+
+#not-found-words{
     display: flex;
     flex-flow: column wrap;
     justify-content: space-evenly;

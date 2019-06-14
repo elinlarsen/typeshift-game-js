@@ -1,8 +1,8 @@
 class Playset{
-    constructor(arrWords){ 
+    constructor(arrWords, dic){ 
         this.words=arrWords; 
         this.pseudos=[]; 
-        this.dic=arrWords.flat(); 
+        this.dic=dic; 
         this.found=[];
     }
 
@@ -88,10 +88,13 @@ class Playset{
 
     retrieveRealWord(){
         //retrieve  generated sequence of letters that are in the dictionary 
-        const realWords=[];       
-        for (let p=0; p<this.pseudos.length; p++) {
-            const joined=this.pseudos[p].join("")
-            if(this.dic.includes(joined))
+        const realWords=[];  
+        var pW=this.generatePseudoWords() 
+        console.log(pW)    
+        for (let p=0; p<pW.length; p++) {
+            const joined=pW[p].join("")
+            console.log(joined)
+            if(this.dic.includes(joined)==true)
             {realWords.push(joined)}
         }
         return realWords

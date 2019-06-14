@@ -47,7 +47,8 @@ import { Game } from "./game.js"
     var secDec = document.getElementById('secDec');
     var secUni = document.getElementById('secUni');
     var grid = document.getElementById("grid");
-    var foundAll = document.getElementById("found-words");
+    var allFoundParent = document.getElementById("found-words");
+    var notFoundParent= document.getElementById("not-found-words")
 
     // --------------------------------
     // Data processing : reading, cleaning, filtering, shuffling
@@ -181,20 +182,20 @@ import { Game } from "./game.js"
     function drawGrid(letters) {
         const len = letters[0].length
         const nbWords = letters.length
-        const nbRows = (nbWords - 1) * 2 + 2
+        const nbRows = (nbWords - 1) * 2 + 1
         const nbColumns = len + 2
         grid.style.gridTemplateColumns = `repeat(${nbColumns}, 1fr)`;
         grid.style.gridTemplateRows = `repeat(${nbRows}, 1fr)`;
     }
 
 
-    function createSpanAllFound(founds) {
-        if(!foundAll.firstChild){
+    function createSpanPartyWords(founds, parentElement) {
+        if(!parentElement.firstChild){
             const nbFounds=founds.length;
             const nbCols= Math.floor(nbFounds/3)+1;
             var nbInCols;
-            if(nbFounds<=6){ nbInCols=2}
-            else if (nbFounds<=12){nbInCols=3}
+            if(nbFounds<=4){ nbInCols=2}
+            else if (nbFounds<=8){nbInCols=3}
             else {nbInCols=4}
 
             for (let i=0; i<nbCols; i++){
@@ -202,7 +203,7 @@ import { Game } from "./game.js"
                 colWords.className="col"+i
                 for (let f = 0; f < nbInCols; f++) {  
                     const y=f+i*nbInCols;
-                    foundAll.appendChild(colWords);         
+                    parentElement.appendChild(colWords);         
                     const foundEl = document.createElement("span");
                     colWords.appendChild(foundEl); 
                     foundEl.className = "found col "+i;
@@ -211,16 +212,9 @@ import { Game } from "./game.js"
             }
         } 
         else {
-            console.log("footer of words has already words", foundAll.firstChild)
+            console.log("footer of words has already words", parentElement.firstChild)
         }
-
     }
-
-    function createSpanNotFound(founds){
-        var notFound=playset.retrieveRealWord()
-    }
-
-
 
     // --------------------------------
     // Dragging letters
@@ -251,7 +245,14 @@ import { Game } from "./game.js"
 
             var prop = new Proposition(wordLen, dic, playset.found);
             prop.turnBlue();
-            prop.found==null ? console.log("not a word") :game.setFoundWord(prop.found)           
+
+            if(prop.found==null ){
+                console.log("not a word")
+            }
+            else {
+                game.setFoundWord(prop.found)   
+            }
+                     
             endParty(); //are all letters been found ?   
         }
 
@@ -275,13 +276,29 @@ import { Game } from "./game.js"
 
         const endParty = ()=>{
             var R=document.querySelectorAll(".rightGuess")
+            
             if(L.length==R.length)
             {
-                let allFounds=game.getFoundWords(game.indexOfPlay)
-                console.log("all letters found !", "words found : ", allFounds)
-                createSpanAllFound(allFounds)
+                const allFoundParty=game.getFoundWords(game.indexOfPlay);
+                const notFoundParty= getNotFound(allFoundParty);
+                console.log("all letters found !", "words found : ", allFoundParty);
+                console.log("all letters found !", "words NOT found : ", notFoundParty);
+                createSpanPartyWords(allFoundParty, allFoundParent)  ;            
+                createSpanPartyWords(notFoundParty, notFoundParent);
                 btnLeft.click();
             } 
+        }
+
+        function getNotFound(founds) {
+            var allWordsParty=playset.retrieveRealWord();
+            console.log("all words in the party : ", allWordsParty)
+            var notFound=[];
+            for (let i=0; i<founds.length; i++){
+                if(allWordsParty.includes(founds[i])==false){
+                    notFound.push(founds[i]);
+                }
+            }
+            return notFound
         }
 
         //for (let i = wordLen; i < 2 * wordLen; i++) { L[i].setAttribute("draggable", "false") }
@@ -352,7 +369,7 @@ import { Game } from "./game.js"
         let indexOfPlay = game.indexOfPlay;
         let words = wordsList[indexOfPlay];
         let dic = allWords;
-        let playset = new Playset(words);
+        let playset = new Playset(words, dic);
         let letters = playset.selectRandomlyPseudo();
 
         if (btnLeft.className == "btn start" && btnLeft.textContent == "START") {
