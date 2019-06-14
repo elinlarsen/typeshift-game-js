@@ -46,15 +46,4 @@
             }
         }
 
-        /*
-        addFound(){
-            var prop = this.getCombination().proposed
-            if (this.isGuessRight() && !this.found.includes(prop)){
-                this.found.push(prop)
-            }
-            return this.found
-        }
-        */
-
-
     }

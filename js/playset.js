@@ -31,8 +31,6 @@ class Playset{
         res[index]=value
         return res
     }
-
-
    
     /** 
     * array comparison, array inclusion in array, add pseudo word
@@ -89,7 +87,7 @@ class Playset{
      */
 
     retrieveRealWord(){
-        //retrieve  pseudos that are in doc 
+        //retrieve  generated sequence of letters that are in the dictionary 
         const realWords=[];       
         for (let p=0; p<this.pseudos.length; p++) {
             const joined=this.pseudos[p].join("")
