@@ -48,7 +48,7 @@ import { Game } from "./game.js"
     var secUni = document.getElementById('secUni');
     var grid = document.getElementById("grid");
     var allFoundParent = document.getElementById("found-words");
-    var notFoundParent= document.getElementById("not-found-words")
+    var notFoundParent= document.getElementById("not-found-words"); 
 
     // --------------------------------
     // Data processing : reading, cleaning, filtering, shuffling
@@ -177,6 +177,7 @@ import { Game } from "./game.js"
             allFoundParent.removeChild(allFoundParent.firstChild)
         }
         while(notFoundParent.firstChild){
+            console.log( "notFoundParent has children")
             notFoundParent.removeChild(notFoundParent.firstChild)
         }
         
