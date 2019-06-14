@@ -176,7 +176,7 @@ import { Game } from "./game.js"
         while(allFoundParent.firstChild){
             allFoundParent.removeChild(allFoundParent.firstChild)
         }
-        while(allFoundParent.firstChild){
+        while(notFoundParent.firstChild){
             notFoundParent.removeChild(notFoundParent.firstChild)
         }
         
