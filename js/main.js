@@ -7,7 +7,7 @@ import { Game } from "./game.js"
     // --------------------------------
     // Playset variables
     // --------------------------------
-    var allWords, allFrequentWords, wordsList = [], definitions = null;
+    var allWords, allFrequentWords, wordsList = [];
  
     function getJSONDictionnary() {
         return new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ import { Game } from "./game.js"
             }).then(w => {
                 allWords = Object.keys(w);
                 cleanWords(allWords)
-                resolve("whaaat");
+                resolve("dictionnary read");
             })
         })
     }
@@ -190,17 +190,34 @@ import { Game } from "./game.js"
 
     function createSpanAllFound(founds) {
         if(!foundAll.firstChild){
-            for (let f = 0; f < founds.length; f++) {
-                const foundEl = document.createElement("span");
-                foundAll.appendChild(foundEl);
-                foundEl.className = "found";
-                foundEl.textContent = founds[f];
+            const nbFounds=founds.length;
+            const nbCols= Math.floor(nbFounds/3)+1;
+            var nbInCols;
+            if(nbFounds<=6){ nbInCols=2}
+            else if (nbFounds<=12){nbInCols=3}
+            else {nbInCols=4}
+
+            for (let i=0; i<nbCols; i++){
+                const colWords=document.createElement("span");
+                colWords.className="col"+i
+                for (let f = 0; f < nbInCols; f++) {  
+                    const y=f+i*nbInCols;
+                    foundAll.appendChild(colWords);         
+                    const foundEl = document.createElement("span");
+                    colWords.appendChild(foundEl); 
+                    foundEl.className = "found col "+i;
+                    foundEl.textContent = founds[y];                 
+                }
             }
         } 
         else {
             console.log("footer of words has already words", foundAll.firstChild)
         }
 
+    }
+
+    function createSpanNotFound(founds){
+        var notFound=playset.retrieveRealWord()
     }
 
 

@@ -200,6 +200,11 @@ footer{
     margin: 0%; 
 }
 
+#found-title{
+    text-align: center;
+    color: rgb(226, 203, 51);
+}
+
 
 #sphere {
     border: none; 
