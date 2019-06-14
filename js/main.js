@@ -1,11 +1,6 @@
 import { Game } from "./game.js"
 
-/**
- * @todo: manage stop button, display results at the end of a party OR when touching stop
- * @todo : drag an drop button
- * @todo : function check combination and display the change of colors when the combination is right
- * @todo : display instructions , pop hover 
- */
+
 (function () {
     "use strict";
 
@@ -13,11 +8,7 @@ import { Game } from "./game.js"
     // Playset variables
     // --------------------------------
     var allWords, allFrequentWords, wordsList = [], definitions = null;
-    // allWords is the dictionnary where words will be compared
-    // allFrequentWords is the list of words in which the parties will be generated 
-    //wordsList is the list of words for each party. In eahc party, the length of words is the same
-
-
+ 
     function getJSONDictionnary() {
         return new Promise((resolve, reject) => {
             const jsonPath = "./../data/dictionary.json";
@@ -33,11 +24,6 @@ import { Game } from "./game.js"
             })
         })
     }
-
-
-
-
-
     function getJSONCleanData() {
         const jsonPath = "./../data/allFrequentWords.json";
         fetch(jsonPath).then(res => {
@@ -50,27 +36,22 @@ import { Game } from "./game.js"
             wordsList = createGameSet(allFrequentWords, 3, [4, 5, 6])
         })
     }
-
     getJSONCleanData()
-
 
     const chrono = new Chronometer()
     const game = new Game(allWords)
-
-
     const btnRight = document.getElementById("btnRight")
-    const btnHowTo = document.getElementById("howto")
     var btnLeft = document.getElementById('btnLeft');
     var minDec = document.getElementById('minDec');
     var minUni = document.getElementById('minUni');
     var secDec = document.getElementById('secDec');
     var secUni = document.getElementById('secUni');
-
+    var grid = document.getElementById("grid");
+    var foundAll = document.getElementById("found-words");
 
     // --------------------------------
     // Data processing : reading, cleaning, filtering, shuffling
     // --------------------------------
-
 
     const shuffle = (array) => {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -109,19 +90,15 @@ import { Game } from "./game.js"
     }
 
 
-
     // --------------------------------
     // Create HTML content 
     // --------------------------------
-    var grid = document.getElementById("grid")
-    var foundAll = document.getElementById("found-words")
-    //var gridChildNodes = grid.childNodes
 
     function createLetterElement(l, index, indexWord) {
-        const letter = document.createElement("span")
+        const letter = document.createElement("span");
         grid.appendChild(letter);
-        letter.className = "cell letter"
-        letter.textContent = l
+        letter.className = "cell letter";
+        letter.textContent = l;
 
         if (indexWord == 0) { letter.style.gridRow = 2; /*letter.setAttribute("row", "2")*/ }
         if (indexWord == 1) { letter.style.gridRow = 3; /*letter.setAttribute("row", "3") */ }
@@ -135,19 +112,19 @@ import { Game } from "./game.js"
         if (index == 5) { letter.style.gridColumn = 7; /*letter.setAttribute("col", "7") */ }
         if (index == 6) { letter.style.gridColumn = 8; /*letter.setAttribute("col", "8") */ }
 
-        letter.setAttribute("draggable", "true")
+        letter.setAttribute("draggable", "true");
     }
 
     function createEmptyElement(count, columnIndex) {
-        var shadow = document.createElement("span")
+        var shadow = document.createElement("span");
         grid.appendChild(shadow);
-        shadow.setAttribute("draggable", "false")
-        shadow.setAttribute("dropzone", "false")
+        shadow.setAttribute("draggable", "false");
+        shadow.setAttribute("dropzone", "false");
 
         if (count == 2) {
-            shadow.className = "cell shadow"
-            shadow.style.gridRow = 3
-            shadow.style.gridColumn = columnIndex
+            shadow.className = "cell shadow";
+            shadow.style.gridRow = 3;
+            shadow.style.gridColumn = columnIndex;
         }
         else { shadow.className = "cell invisible" }
     }
@@ -155,43 +132,40 @@ import { Game } from "./game.js"
     function createArrowRow(direction, len) {
         for (let i = 0; i < len; i++) {
             if (direction == "up" || direction == "down") {
-                var arr = document.createElement("span")
-                arr.setAttribute("draggable", "false")
-                arr.className = "cell arrow " + direction
-                grid.appendChild(arr)
+                var arr = document.createElement("span");
+                arr.setAttribute("draggable", "false");
+                arr.className = "cell arrow " + direction;
+                grid.appendChild(arr);
             }
-            else throw Error("direction must either be up or down")
+            else throw Error("direction must either be up or down");
         }
     }
 
     function drawCells(letters) {
         var count = 1;
-        const len = letters[0].length
+        const len = letters[0].length;
 
         if(!grid.firstChild){
             // first row
-            createEmptyElement(count, 1) // col1 
-            createArrowRow("down", len) // col2 ... col 2+ len
-            createEmptyElement(count, len + 2) // col 2 + len +1
+            createEmptyElement(count, 1); // col1 
+            createArrowRow("down", len); // col2 ... col 2+ len
+            createEmptyElement(count, len + 2); // col 2 + len +1
 
             // rows with letters 
             letters.forEach((element, indexWord) => {
-                createEmptyElement(count, 1)
-                element.forEach((l, index) => { createLetterElement(l, index, indexWord) })
-                createEmptyElement(count, len + 2)
+                createEmptyElement(count, 1);
+                element.forEach((l, index) => { createLetterElement(l, index, indexWord) });
+                createEmptyElement(count, len + 2);
                 count++
             });
-
             // last rows
-            createEmptyElement(count, 1)
-            createArrowRow("up", len)
-            createEmptyElement(count, len + 2)
+            createEmptyElement(count, 1);
+            createArrowRow("up", len);
+            createEmptyElement(count, len + 2);
         }
-
     }
 
     function emptyGrid() {
-        //grid = document.getElementById("grid")
         while (grid.firstChild) {
             grid.removeChild(grid.firstChild);
         }
@@ -216,7 +190,6 @@ import { Game } from "./game.js"
 
     function createSpanAllFound(founds) {
         if(!foundAll.firstChild){
-            console.log("footer empty, will be filled with found words")
             for (let f = 0; f < founds.length; f++) {
                 const foundEl = document.createElement("span");
                 foundAll.appendChild(foundEl);
@@ -225,8 +198,7 @@ import { Game } from "./game.js"
             }
         } 
         else {
-            console.log("footer of words has already words")
-            console.log(foundAll.firstChild)
+            console.log("footer of words has already words", foundAll.firstChild)
         }
 
     }
@@ -252,11 +224,8 @@ import { Game } from "./game.js"
         }
 
         const dropAndCheck = (ev, j, dic) => {
-
-            //L[j].className = 'cell letter';   
             const dragRow = parseInt(draggedElement.style.gridRowStart);
             const dragCol = parseInt(draggedElement.style.gridColumnStart);
-
             const dropRow = parseInt(ev.target.style.gridRowStart);
             const dropCol = parseInt(ev.target.style.gridColumnStart);
 
@@ -265,16 +234,11 @@ import { Game } from "./game.js"
 
             var prop = new Proposition(wordLen, dic, playset.found);
             prop.turnBlue();
-  
-            prop.found==null ? console.log("not a word") :game.setFoundWord(prop.found)
-            
-            endParty(); //are all letters been found ?
-
-        
+            prop.found==null ? console.log("not a word") :game.setFoundWord(prop.found)           
+            endParty(); //are all letters been found ?   
         }
 
         const dragDropUp = (ev, j, dic) => {
-            console.log("drop up");
             const rowPos = parseInt(L[j].style.gridRowStart);
             if (j - 2 * wordLen >= 0) {
                 L[j].style.gridRowStart = rowPos - 1;
@@ -284,7 +248,6 @@ import { Game } from "./game.js"
         }
 
         const dragDropDown = (ev, j, dic) => {
-            console.log("drop down");
             const rowPos = parseInt(L[j].style.gridRowStart)
             if (j + 2 * wordLen < nbLetters) {
                 L[j].style.gridRowStart = rowPos + 1
@@ -301,7 +264,6 @@ import { Game } from "./game.js"
                 console.log("all letters found !", "words found : ", allFounds)
                 createSpanAllFound(allFounds)
                 btnLeft.click();
-                //chrono.stopClick()
             } 
         }
 
@@ -329,7 +291,6 @@ import { Game } from "./game.js"
             L[prev].addEventListener('drop', function (evt) { dropAndCheck(evt, m, dic) })
         }
 }
-
 
     // --------------------------------
     // Chronometer
@@ -377,7 +338,6 @@ import { Game } from "./game.js"
         let playset = new Playset(words);
         let letters = playset.selectRandomlyPseudo();
 
-
         if (btnLeft.className == "btn start" && btnLeft.textContent == "START") {
             chrono.startClick();
             drawGrid(letters);
@@ -386,8 +346,6 @@ import { Game } from "./game.js"
             printTime();
             setStopBtn();
             setHoldBtn();
-            
-
         }
         else if (btnLeft.className == "btn stop" && btnLeft.textContent == "STOP") {
             chrono.stopClick();
@@ -415,12 +373,8 @@ import { Game } from "./game.js"
             //setHoldBtn ()
         }
         else if (btnRight.className == "btn triangle hold" && btnLeft.className == "btn stop") {
-
-            console.log("party blocked")
+            throw new Error("party blocked")
         }
-        return
-        //else if(btnRight.className=="btn triangle hold" && btnLeft.className=="btn stop"){}
-
     }
 
     // --------------------------------
@@ -428,14 +382,11 @@ import { Game } from "./game.js"
     // --------------------------------
 
     window.addEventListener("DOMContentLoaded", (event) => {
-        console.log("DOM entièrement chargé et analysé");
         getJSONDictionnary().then(res => {
             console.log(res);
             btnLeft.addEventListener('click', function (evt) { btnLeftListener(game, wordsList, chrono) });
             btnLeft.click();
             btnRight.addEventListener('click', function (evt) { btnRightListener(game, wordsList, chrono) });
-
-
         })
 
     });
