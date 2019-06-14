@@ -293,9 +293,9 @@ import { Game } from "./game.js"
             var allWordsParty=playset.retrieveRealWord();
             console.log("all words in the party : ", allWordsParty)
             var notFound=[];
-            for (let i=0; i<founds.length; i++){
-                if(allWordsParty.includes(founds[i])==false){
-                    notFound.push(founds[i]);
+            for (let i=0; i<allWordsParty.length; i++){
+                if(founds.includes(allWordsParty[i])==false){
+                    notFound.push(allWordsParty[i]);
                 }
             }
             return notFound
