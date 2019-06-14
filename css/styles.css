@@ -200,6 +200,7 @@ h1 {
   /* --------------------------------
   Footer
   --------------------------------  */
+
 footer{
     height: 25vh; 
     display: flex;
@@ -267,9 +268,30 @@ footer{
 .btn.triangle.hold{
     border-left: 30px solid var(--shadow);
     opacity: 0.8;
-
 }
 
+#result{
+    display: flex;
+    justify-content: space-around;
+    align-items: center; 
+}
+
+#Found{
+    margin: 0 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center; 
+    flex-flow: column;
+}
+
+#notFound{
+    margin: 0 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center; 
+    flex-flow: column;
+
+}
 
 #found-title{
     text-align: center;
