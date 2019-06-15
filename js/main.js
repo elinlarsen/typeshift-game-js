@@ -49,6 +49,7 @@ import { Game } from "./game.js"
     var grid = document.getElementById("grid");
     var allFoundParent = document.getElementById("found-words");
     var notFoundParent= document.getElementById("not-found-words"); 
+ 
 
     // --------------------------------
     // Data processing : reading, cleaning, filtering, shuffling
@@ -226,8 +227,8 @@ import { Game } from "./game.js"
     // --------------------------------
 
     const dragLetters = (dic, playset) => {
-        var draggedElement = null;
         const L = document.querySelectorAll(".letter")
+        var draggedElement = null;
         const nbLetters = L.length;
         const wordLen = L.length / 3;
 
@@ -281,30 +282,14 @@ import { Game } from "./game.js"
 
         const endParty = ()=>{
             var R=document.querySelectorAll(".rightGuess")
-            
             if(L.length==R.length)
             {
-                btnLeft.click();
-                const allFoundParty=game.getFoundWords(game.indexOfPlay);
-                const notFoundParty= getNotFound(allFoundParty);
-                console.log("all letters found !", "words found : ", allFoundParty);
-                console.log("all letters found !", "words NOT found : ", notFoundParty);
-                createSpanPartyWords(allFoundParty, allFoundParent);            
-                createSpanPartyWords(notFoundParty, notFoundParent);
+                console.log("coucou : enf of party");
                 
+                btnLeft.click();   
             } 
-        }
-
-        function getNotFound(founds) {
-            var allWordsParty=playset.retrieveRealWord();
-            console.log("all words in the party : ", allWordsParty)
-            var notFound=[];
-            for (let i=0; i<allWordsParty.length; i++){
-                if(founds.includes(allWordsParty[i])==false){
-                    notFound.push(allWordsParty[i]);
-                }
+            else{console.log("not all letter found");
             }
-            return notFound
         }
 
         //for (let i = wordLen; i < 2 * wordLen; i++) { L[i].setAttribute("draggable", "false") }
@@ -330,6 +315,18 @@ import { Game } from "./game.js"
             L[prev].addEventListener('dragover', function (evt) { dragOver(evt) })
             L[prev].addEventListener('drop', function (evt) { dropAndCheck(evt, m, dic) })
         }
+}
+
+function getNotFound(founds,playset) {
+    var allWordsParty=playset.retrieveRealWord();
+    console.log("all words in the party : ", allWordsParty)
+    var notFound=[];
+    for (let i=0; i<allWordsParty.length; i++){
+        if(founds.includes(allWordsParty[i])==false){
+            notFound.push(allWordsParty[i]);
+        }
+    }
+    return notFound
 }
 
     // --------------------------------
@@ -388,6 +385,12 @@ import { Game } from "./game.js"
             setHoldBtn();
         }
         else if (btnLeft.className == "btn stop" && btnLeft.textContent == "STOP") {
+            const allFoundParty=game.getFoundWords(game.indexOfPlay);
+            const notFoundParty= getNotFound(allFoundParty,playset);
+            console.log("all letters found !", "words found : ", allFoundParty);
+            console.log("all letters found !", "words NOT found : ", notFoundParty);
+            createSpanPartyWords(allFoundParty, allFoundParent);            
+            createSpanPartyWords(notFoundParty, notFoundParent);
             chrono.stopClick();
             setStartBtn();
             setNextBtn();
