@@ -284,13 +284,14 @@ import { Game } from "./game.js"
             
             if(L.length==R.length)
             {
+                btnLeft.click();
                 const allFoundParty=game.getFoundWords(game.indexOfPlay);
                 const notFoundParty= getNotFound(allFoundParty);
                 console.log("all letters found !", "words found : ", allFoundParty);
                 console.log("all letters found !", "words NOT found : ", notFoundParty);
-                createSpanPartyWords(allFoundParty, allFoundParent)  ;            
+                createSpanPartyWords(allFoundParty, allFoundParent);            
                 createSpanPartyWords(notFoundParty, notFoundParent);
-                btnLeft.click();
+                
             } 
         }
 

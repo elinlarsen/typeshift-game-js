@@ -281,6 +281,7 @@ footer{
     display: flex;
     justify-content: space-evenly;
     align-items: center; 
+    font-size: 1.2em;
     flex-flow: column;
 }
 
@@ -290,6 +291,7 @@ footer{
     justify-content: space-evenly;
     align-items: center; 
     flex-flow: column;
+    font-size: 1.2em;
 
 }
 
@@ -318,7 +320,7 @@ footer{
     flex-flow: column wrap;
     justify-content: space-evenly;
     align-items: center;
-    font-size: 1em;
+    font-size: 1.2em;
     text-transform: uppercase;
 }
 
