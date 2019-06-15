@@ -281,7 +281,7 @@ footer{
     display: flex;
     justify-content: space-evenly;
     align-items: center; 
-    font-size: 1.2em;
+    font-size: 16px;
     flex-flow: column;
 }
 
@@ -291,7 +291,7 @@ footer{
     justify-content: space-evenly;
     align-items: center; 
     flex-flow: column;
-    font-size: 1.2em;
+    font-size: 16px;
 
 }
 
